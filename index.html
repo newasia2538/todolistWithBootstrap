@@ -1,0 +1,269 @@
+<html>
+<head>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="./css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
+</head>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<body  ng-app="myApp">
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" >Reminders</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					
+				</ul>
+				
+				<ul class="nav navbar-nav navbar-right">
+					<div>
+						<li><a href="#" data-target="#myModal" data-toggle="modal">Add</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">All</a></li>
+								<li><a href="#">Complete</a></li>
+								<li><a href="#">Incomplete</a></li>
+							</ul>
+						</li>
+					</div>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container">
+		<div ng-controller="customersCtrl">
+			<table class="table table-condensed">
+				<div ng-repeat="x in array track by $index">
+					<div class="row">
+						<div class="col-xs-1 col-md-1" align="center" id="{{ $index }}">{{ $index }}</div>
+						<div class="col-xs-1 col-md-1" align="center"><label class="checkbox-inline">
+							<input type="checkbox" id="inlineCheckbox1" value="option1">
+						</label></div>
+						<div class="col-xs-9 col-md-9" align="center" ng-click="showDetail(x.title,x.desc,x.date)"><a href="#" data-toggle="modal" data-target="#myModal" id="titleShow">{{ x.title }}</a></div>
+						<div class="col-xs-1 col-md-1" align="center"><button class="btn btn-danger btn-xs">Remove</button></div>
+					</div>
+				</div>
+			</table>
+		</div> 
+	</div>
+	<div>
+		<button onclick="localStorage.clear();">Reset</button>
+	</div>
+
+
+
+	<!-- Modal Form Add -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">To do</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="inputTitle" class="col-sm-2 control-label">Title</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="inputTitle" placeholder="Title">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputDescription" class="col-sm-2 control-label">Description</label>
+							<div class="col-sm-10">
+								<textarea  type="text" class="form-control" style="height: 200px" id="inputDescription" placeholder="Description"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputDate" class="col-sm-2 control-label">Date</label>
+							<div class="col-sm-10">
+								<input type="text" value="" id="datetimepicker" data-date-format="yyyy-mm-dd hh:ii" tabindex="-1" readonly>
+								<span class="add-on"><i class="glyphicon glyphicon-th"></i></span>
+							</div>
+						</div>
+
+
+
+					</form>
+				</div>
+				<div class="modal-footer" ng-controller="saveCtrl">
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearModal()">Close</button>
+					<button class="btn btn-primary" ng-click="storeData()" data-dismiss="modal">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal from list -->
+	<div class="modal fade" id="ModalDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" ng-controller="editCtrl">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">To do</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label for="inputTitle" class="col-sm-2 control-label">Title</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="inputTitle" placeholder="Title">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputDescription" class="col-sm-2 control-label">Description</label>
+							<div class="col-sm-10">
+								<textarea  type="text" class="form-control" style="height: 200px" id="inputDescription" placeholder="Description"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputDate" class="col-sm-2 control-label">Date</label>
+							<div class="col-sm-10">
+								<input type="text" value="" id="datetimepicker" data-date-format="yyyy-mm-dd hh:ii" tabindex="-1" readonly>
+								<span class="add-on"><i class="glyphicon glyphicon-th"></i></span>
+							</div>
+						</div>
+
+
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" ng-click="clearModal()" data-dismiss="modal">Close</button>
+					<button class="btn btn-primary" ng-click="editData()" data-dismiss="modal">Save Change</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	
+
+
+
+
+	<script>
+		var app = angular.module('myApp', []);
+
+		var gg = [];
+		
+		
+		if(localStorage.getItem("array") != null){
+			gg = JSON.parse(localStorage.getItem("array"));
+		}
+		else{
+
+		}
+
+
+		app.controller('customersCtrl', function($scope) {
+
+			$scope.array = gg;
+
+			console.log(JSON.stringify(gg));
+
+			$scope.showDetail = function(title,desc,date){
+				$(".modal-body #inputTitle").val(title);
+				$(".modal-body #inputDescription").val(desc);
+				$(".modal-body #datetimepicker").val(date);
+
+			}
+
+		});
+
+		app.controller('saveCtrl',function($scope){
+			$scope.storeData = function(){
+
+				if(typeof(Storage) !== "undefined") {
+
+
+					var title = document.getElementById("inputTitle").value;
+
+					var desc = document.getElementById("inputDescription").value;
+
+					var date = document.getElementById("datetimepicker").value;
+
+					var obj = { title:title, desc:desc, date:date };
+
+					gg.push(obj);
+
+			// Save Data in localStorage.
+			localStorage.setItem("array", JSON.stringify(gg));
+
+			clearModal();
+
+		} else {
+			alert("Sorry, your browser does not support web storage...");
+		}
+
+	}
+	$scope.clearModal = function(){
+		$('#myModal').on('hidden.bs.modal', function () {
+			$(this).find("input,textarea").val('').end();
+
+		});
+	}
+
+});
+
+		app.controller('editCtrl',function($scope){
+			
+			$scope.editData = function(index){
+
+				clearModal();
+			}
+
+			
+			$scope.clearModal = function(){
+				$('#myModal').on('hide.bs.modal', function () {
+					
+					$(this).removeData();
+
+				});
+			}
+
+		});
+	</script>
+
+	<script type="text/javascript">
+
+	</script>
+
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<script type="text/javascript" src="./js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		$("#datetimepicker").datetimepicker({
+			autoclose: true,
+			todayBtn: true
+		});
+	</script>
+
+
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
