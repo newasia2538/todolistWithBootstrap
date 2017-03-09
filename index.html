@@ -36,7 +36,7 @@
 
 					<ul class="nav navbar-nav navbar-right">
 						<div>
-							<li><a href="#" data-target="#myModal" data-toggle="modal">Add</a></li>
+							<li><a href="#" data-target="#myModal" data-toggle="modal" ng-click="addButton">Add</a></li>
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Filter <span class="caret"></span></a>
 								<ul class="dropdown-menu">
@@ -111,8 +111,9 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearModal()">Close</button>
-						<button class="btn btn-primary" ng-hide="bl" ng-show="!bl" ng-click="storeData()" data-dismiss="modal">Save</button>
-						<button class="btn btn-primary" ng-show="bl" ng-hide="!bl" ng-click="storeData()" data-dismiss="modal">Edit</button>
+						<button class="btn btn-primary" ng-if="!bl" ng-click="storeData()" data-dismiss="modal">Save</button>
+						<button class="btn btn-primary" ng-if="bl" ng-click="storeData()" data-dismiss="modal">Edit</button>
+
 					</div>
 				</div>
 			</div>
@@ -149,10 +150,6 @@
 
 			console.log(JSON.stringify(gg));
 
-			$scope.isEditClicked = function(){
-
-				return bl
-			}
 
 			$scope.showDetail = function(title,desc,date){
 
@@ -161,8 +158,11 @@
 				$(".modal-body #inputDescription").val(desc);
 				$(".modal-body #datetimepicker").val(date);
 
-				
+			
+			}
 
+			$scope.addButton = function(){
+				$scope.bl = false;
 			}
 
 			$scope.filterClick = function(id){
@@ -226,7 +226,7 @@
 
 					var date = document.getElementById("datetimepicker").value;
 
-					var obj = { title:title, desc:desc, date:date , status:"0" };
+					var obj = { title:title, desc:desc, date:date , status:0 };
 
 					gg.push(obj);
 
@@ -247,6 +247,7 @@
 	$scope.clearModal = function(){
 		$('#myModal').on('hidden.bs.modal', function () {
 			$(this).find("input,textarea").val('').end();
+			console.log($scope.bl);
 			$scope.bl = false;
 
 		});
