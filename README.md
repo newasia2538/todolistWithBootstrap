@@ -2,7 +2,7 @@
 
 ## To-do-list
 
-### This project developed with Bootstrap , javascript , Angular 
+This project developed with Bootstrap , javascript , Angular 
 
 How to run
 
